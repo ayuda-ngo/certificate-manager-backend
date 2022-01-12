@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
 // project imports
 import { InvalidInputError } from "../core/errors";
 
@@ -16,17 +14,15 @@ export interface ICertificateService {
 
 export class CertificateService implements ICertificateService {
   async createCertificate(certificateData: CertificateDTO): Promise<string> {
-    let { name } = certificateData;
+    let { id, name } = certificateData;
 
     if (!name) {
-      name = "Vidipt";
-      // throw new InvalidInputError("Invalid name");
+      throw new InvalidInputError("Invalid name");
     }
 
-    const id = uuidv4();
-
-    console.log(`Generating certificate for ${name} with UID : ${id}`);
-
-    return await generateCertificate(name);
+    return await generateCertificate({
+      name,
+      url: `https://certify.ngoayuda.org/verify/${id}`,
+    });
   }
 }

@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
+import { nanoid } from "nanoid";
+import { UUID_LENGTH } from "../config";
+
 import logger from "../logger";
 
+// project imports
 import {
   CertificateDTO,
   ICertificateService,
@@ -17,7 +21,13 @@ export class GenerateCertificateController extends BaseController {
 
   protected async executeImpl(req: Request, res: Response) {
     try {
-      const certificateData: CertificateDTO = req.body;
+      const certificateData: CertificateDTO = {
+        id: nanoid(UUID_LENGTH),
+        name: req.body.name,
+      };
+
+      logger.debug("create-certificate-controller", certificateData);
+
       const certificate =
         this._certificateService.createCertificate(certificateData);
 

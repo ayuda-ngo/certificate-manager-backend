@@ -8,3 +8,5 @@ export const context = {
 export const PORT = process.env.PORT || 3000;
 
 export const IS_TEST = process.env.NODE_ENV === "test";
+
+export const UUID_LENGTH = 6;

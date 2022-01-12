@@ -4,23 +4,25 @@ import http from "http";
 import app from "./routes";
 import { context, IS_TEST, PORT } from "./config";
 import logger from "./logger";
+import { startDB } from "./core/database";
 
 const server = http.createServer(app);
 
 async function startProcess() {
   try {
-    // await sequelizeDb.authenticate();
-    logger.debug(
-      context.DATABASE_CONTEXT,
-      "Connection has been established successfully."
-    );
-
     server.listen(PORT, () => {
       logger.info(
         context.SERVER_CONTEXT,
         `Server is listening on port ${PORT}.`
       );
     });
+
+    // await mongoDB connect();
+    await startDB();
+    logger.debug(
+      context.DATABASE_CONTEXT,
+      "Connection has been established successfully."
+    );
   } catch (error) {
     logger.error(
       context.DATABASE_CONTEXT,

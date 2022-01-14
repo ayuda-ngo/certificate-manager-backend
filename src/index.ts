@@ -10,19 +10,20 @@ const server = http.createServer(app);
 
 async function startProcess() {
   try {
+    // await mongoDB connect();
+    await startDB();
+    logger.debug(
+      context.DATABASE_CONTEXT,
+      "Database connection has been established successfully."
+    );
+
+    // start server
     server.listen(PORT, () => {
       logger.info(
         context.SERVER_CONTEXT,
         `Server is listening on port ${PORT}.`
       );
     });
-
-    // await mongoDB connect();
-    await startDB();
-    logger.debug(
-      context.DATABASE_CONTEXT,
-      "Connection has been established successfully."
-    );
   } catch (error) {
     logger.error(
       context.DATABASE_CONTEXT,

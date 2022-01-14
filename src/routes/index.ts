@@ -33,7 +33,7 @@ app.get("/", (_, res) => {
 
 app.use("/static", express.static(path.join(__dirname, "../assets")));
 
-app.use("/certificate", CertificateRoute);
+app.use("/certificates", CertificateRoute);
 
 // 404 Error
 app.use(NotFoundHandler);

@@ -12,6 +12,12 @@ export class ApiError extends Error {
   }
 }
 
+export class InvalidInputError extends ApiError {
+  constructor(message: string) {
+    super(400, message || "Invalid Input");
+  }
+}
+
 export class NotFoundError extends ApiError {
   constructor(message: string) {
     super(404, message || "Not Found");

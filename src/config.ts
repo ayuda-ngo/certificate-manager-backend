@@ -1,4 +1,4 @@
-// defaults
+// Defaults
 export const context = {
   SERVER_CONTEXT: "EXPRESS SERVER",
   DATABASE_CONTEXT: "DATABASE",
@@ -15,7 +15,7 @@ export const CERTIFICATE_TEMPLATE_DIR = "./src/assets/template";
 
 export const CERTIFICATE_OUT_DIR = "../../../assets/certificates";
 
-// env vars
+// Env vars
 export const PORT = process.env.PORT || 8000;
 
 export const IS_TEST = process.env.NODE_ENV === "test";

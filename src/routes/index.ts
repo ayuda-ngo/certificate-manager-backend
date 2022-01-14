@@ -27,9 +27,7 @@ app.use(
 app.use(express.json());
 
 // Application Specific Routes
-app.get("/", (_, res) => {
-  return res.send("¯¯\\__(ツ)__/¯¯");
-});
+app.get("/", (_, res) => res.send("¯¯\\__(ツ)__/¯¯"));
 
 app.use("/static", express.static(path.join(__dirname, "../assets")));
 

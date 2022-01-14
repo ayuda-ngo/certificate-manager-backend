@@ -1,4 +1,4 @@
-// project imports
+// Project imports
 
 import {
   DeleteCertificateController,

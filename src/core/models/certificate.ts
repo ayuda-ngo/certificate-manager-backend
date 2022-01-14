@@ -1,4 +1,4 @@
-import { Document, model, Model, Schema } from "mongoose";
+import { Document, Model, Schema, model } from "mongoose";
 
 interface CertificateAttributes {
   uuid: string;
@@ -39,14 +39,13 @@ const certificateSchema = new Schema({
   },
 });
 
-certificateSchema.statics.build = (attributes: CertificateAttributes) => {
-  return new Certificate({
+certificateSchema.statics.build = (attributes: CertificateAttributes) =>
+  new Certificate({
     uuid: attributes.uuid,
     name: attributes.name,
     startDate: attributes.startDate,
     endDate: attributes.endDate,
   });
-};
 
 const Certificate = model<CertificateDoc, CertificateModel>(
   "Certificate",

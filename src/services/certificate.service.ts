@@ -1,4 +1,4 @@
-// project imports
+// Project imports
 import { context } from "../config";
 import { InvalidInputError } from "../core/errors";
 import { InternalServerError, NotFoundError } from "../core/errors/api.error";
@@ -57,7 +57,7 @@ export class CertificateService implements ICertificateService {
   }
 
   async createCertificate(certificateData: CertificateDTO): Promise<any> {
-    let { id, name } = certificateData;
+    const { id, name } = certificateData;
 
     if (!name) {
       throw new InvalidInputError("Invalid name");
@@ -106,7 +106,7 @@ export class CertificateService implements ICertificateService {
       });
     } catch (err: any) {
       logger.error(context.DATABASE_CONTEXT, err.message);
-      throw new InternalServerError((err as Error).message);
+      throw new InternalServerError(err as Error.message);
     }
 
     return {

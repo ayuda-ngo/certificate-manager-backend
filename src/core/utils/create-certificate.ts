@@ -1,10 +1,10 @@
-import { Canvas, createCanvas, Image, loadImage } from "canvas";
+import { Canvas, Image, createCanvas, loadImage } from "canvas";
 import QRCode from "qrcode";
 import { createWriteStream, existsSync, mkdirSync, readFileSync } from "fs";
 import {
-  certificateDefaults,
   CERTIFICATE_OUT_DIR,
   CERTIFICATE_TEMPLATE_DIR,
+  certificateDefaults,
   context,
 } from "../../config";
 import logger from "../../logger";
@@ -22,26 +22,17 @@ interface certificateData {
 export const generateCertificate = async (data: certificateData) => {
   try {
     const blankCertificateFile: Buffer = await readFileSync(
-      CERTIFICATE_TEMPLATE_DIR +
-        "/" +
-        data.certificate.year +
-        "/" +
-        data.certificate.name +
-        ".png"
-    );
-    const certificateImage: Image = await loadImage(blankCertificateFile);
-
-    const canvas = createCanvas(
-      certificateImage.width,
-      certificateImage.height
-    );
-    const ctx = canvas.getContext("2d");
+        `${CERTIFICATE_TEMPLATE_DIR}/${data.certificate.year}/${data.certificate.name}.png`
+      ),
+      certificateImage: Image = await loadImage(blankCertificateFile),
+      canvas = createCanvas(certificateImage.width, certificateImage.height),
+      ctx = canvas.getContext("2d");
     ctx.drawImage(certificateImage, 0, 0, canvas.width, canvas.height);
 
     // Adjust Font Size
-    let fontSize = certificateDefaults.fontSize;
-    let fontFace = certificateDefaults.font;
-    let fontColor = certificateDefaults.fontColor;
+    let { fontSize } = certificateDefaults;
+    const fontFace = certificateDefaults.font,
+      { fontColor } = certificateDefaults;
 
     do {
       fontSize--;
@@ -55,8 +46,8 @@ export const generateCertificate = async (data: certificateData) => {
     ctx.fillText(data.name, certificateImage.width - 725, 1750);
 
     // Generate QRCode.
-    const qrcode: Buffer = await QRCode.toBuffer(data.url);
-    const qrcodeImage: Image = await loadImage(qrcode);
+    const qrcode: Buffer = await QRCode.toBuffer(data.url),
+      qrcodeImage: Image = await loadImage(qrcode);
     ctx.drawImage(qrcodeImage, 1698, 2730, 360, 360);
 
     // Write the Certificate URL
@@ -65,8 +56,10 @@ export const generateCertificate = async (data: certificateData) => {
     ctx.textAlign = "left";
     ctx.fillText(data.url, 1125, 3400);
 
-    // Optional: Save the certificate.
-    // await saveCertificate({ name: data.name, uuid: data.uuid }, canvas);
+    /*
+     * Optional: Save the certificate.
+     * Await saveCertificate({ name: data.name, uuid: data.uuid }, canvas);
+     */
 
     return canvas.toDataURL();
   } catch (err) {
@@ -83,10 +76,9 @@ const saveCertificate = async (
     mkdirSync(__dirname + CERTIFICATE_OUT_DIR);
   }
   const out = createWriteStream(
-    __dirname + CERTIFICATE_OUT_DIR + "/" + data.uuid + ".png"
-  );
-
-  const stream = canvas.createPNGStream();
+      `${__dirname + CERTIFICATE_OUT_DIR}/${data.uuid}.png`
+    ),
+    stream = canvas.createPNGStream();
   stream.pipe(out);
   out.on("finish", () =>
     logger.info(

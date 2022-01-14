@@ -5,7 +5,7 @@ import { ApiError, InvalidInputError } from "../core/errors/api.error";
 
 import logger from "../logger";
 
-// project imports
+// Project imports
 import {
   CertificateDTO,
   ICertificateService,

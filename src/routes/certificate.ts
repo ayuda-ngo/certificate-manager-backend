@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from "express";
 import validator from "validator";
 
-// project imports
+// Project imports
 import { BadRequestError } from "../core/errors/api.error";
 import {
   generateCertificate,

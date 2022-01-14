@@ -1,23 +1,23 @@
 import http from "http";
 
-// project imports
+// Project imports
 import app from "./routes";
-import { context, IS_TEST, PORT } from "./config";
 import logger from "./logger";
 import { startDB } from "./core/database";
+import { IS_TEST, PORT, context } from "./config";
 
 const server = http.createServer(app);
 
-async function startProcess() {
+const startProcess = async () => {
   try {
-    // await mongoDB connect();
+    // Await mongoDB connect();
     await startDB();
     logger.debug(
       context.DATABASE_CONTEXT,
       "Database connection has been established successfully."
     );
 
-    // start server
+    // Start server
     server.listen(PORT, () => {
       logger.info(
         context.SERVER_CONTEXT,
@@ -31,7 +31,7 @@ async function startProcess() {
       error
     );
   }
-}
+};
 
 let stopped = false;
 

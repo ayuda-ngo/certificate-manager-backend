@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-// project imports
+// Project imports
 import {
   InvalidInputError,
   InvalidRequestError,

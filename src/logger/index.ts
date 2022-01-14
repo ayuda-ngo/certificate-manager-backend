@@ -19,11 +19,9 @@ export enum LogType {
   simple = "simple",
 }
 
-let logger: Logger = consoleLogger;
-
-let currentLogLevel: LogLevel = LogLevel.debug;
-
-let currentLogType: LogType = LogType.simple;
+let logger: Logger = consoleLogger,
+  currentLogLevel: LogLevel = LogLevel.debug,
+  currentLogType: LogType = LogType.simple;
 
 export function setLogger(loggerInstance: Logger = consoleLogger) {
   logger = loggerInstance;

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { DB_NAME, MONGO_URI } from "../../config";
 
-// project imports
+// Project imports
 
 const startDB = async () => {
   const url = `${MONGO_URI}/${DB_NAME}`;

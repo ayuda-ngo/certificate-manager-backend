@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { nanoid } from "nanoid";
 import { UUID_LENGTH } from "../config";
-import { ApiError, InvalidInputError } from "../core/errors/api.error";
+import { InvalidInputError } from "../core/errors/api.error";
 
 import logger from "../logger";
 
@@ -22,15 +22,25 @@ export class GenerateCertificateController extends BaseController {
 
   protected async executeImpl(req: Request, res: Response) {
     try {
-      const { name } = req.body;
+      const { name, year, month } = req.body;
+
+      console.log(name, year, month);
 
       if (name.length <= 0) {
         throw new InvalidInputError("Invalid name");
       }
 
+      if (!year || !month) {
+        throw new InvalidInputError("Invalid year or month");
+      }
+
       const certificateData: CertificateDTO = {
         id: nanoid(UUID_LENGTH),
-        name: req.body.name,
+        name: name,
+        regno: req.body.regno || null,
+        email: req.body.email || null,
+        year: year,
+        month: month,
       };
 
       logger.debug("create-certificate-controller", certificateData);

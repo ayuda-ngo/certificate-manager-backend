@@ -1,12 +1,17 @@
 import mongoose from "mongoose";
-import { DB_NAME, MONGO_URI } from "../../config";
 
 // Project imports
+import { context, MONGO_URI } from "../../config";
+import logger from "../../logger";
 
-const startDB = async () => {
-  const url = `${MONGO_URI}/${DB_NAME}`;
+const connectDB = async () => {
+  try {
+    const url = `${MONGO_URI}`;
 
-  await mongoose.connect(url);
+    return await mongoose.connect(url);
+  } catch (err) {
+    logger.error(context.DATABASE_CONTEXT, err);
+  }
 };
 
-export { startDB };
+export { connectDB };

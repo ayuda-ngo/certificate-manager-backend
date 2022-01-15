@@ -3,15 +3,19 @@ import { Document, Model, Schema, model } from "mongoose";
 interface CertificateAttributes {
   uuid: string;
   name: string;
-  startDate: string;
-  endDate: string;
+  email: string;
+  regno: string;
+  year: string;
+  month: string;
 }
 
 export interface CertificateDoc extends Document {
   uuid: string;
   name: string;
-  startDate: string;
-  endDate: string;
+  email: string;
+  regno: string;
+  year: string;
+  month: string;
 }
 
 interface CertificateModel extends Model<CertificateDoc> {
@@ -29,11 +33,17 @@ const certificateSchema = new Schema({
     type: String,
     required: true,
   },
-  startDate: {
+  email: {
+    type: String,
+  },
+  regno: {
+    type: String,
+  },
+  year: {
     type: String,
     required: true,
   },
-  endDate: {
+  month: {
     type: String,
     required: true,
   },
@@ -43,8 +53,10 @@ certificateSchema.statics.build = (attributes: CertificateAttributes) =>
   new Certificate({
     uuid: attributes.uuid,
     name: attributes.name,
-    startDate: attributes.startDate,
-    endDate: attributes.endDate,
+    email: attributes.email,
+    regno: attributes.regno,
+    year: attributes.year,
+    month: attributes.month,
   });
 
 const Certificate = model<CertificateDoc, CertificateModel>(

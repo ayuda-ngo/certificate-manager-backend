@@ -3,7 +3,7 @@ import http from "http";
 // Project imports
 import app from "./routes";
 import logger from "./logger";
-import { startDB } from "./core/database";
+import { connectDB } from "./core/database";
 import { IS_TEST, PORT, context } from "./config";
 
 const server = http.createServer(app);
@@ -11,7 +11,7 @@ const server = http.createServer(app);
 const startProcess = async () => {
   try {
     // Await mongoDB connect();
-    await startDB();
+    await connectDB();
     logger.debug(
       context.DATABASE_CONTEXT,
       "Database connection has been established successfully."

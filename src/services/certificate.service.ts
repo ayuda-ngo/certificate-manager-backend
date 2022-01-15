@@ -5,11 +5,16 @@ import { InternalServerError, NotFoundError } from "../core/errors/api.error";
 import { Certificate } from "../core/models/certificate";
 
 import { generateCertificate } from "../core/utils/create-certificate";
+import { getCertificateConfig } from "../core/utils/get-certificate-config";
 import logger from "../logger";
 
 export interface CertificateDTO {
   id: string;
   name: string;
+  regno: string;
+  email: string;
+  year: string;
+  month: string;
 }
 
 export interface ICertificateService {
@@ -22,26 +27,30 @@ export interface ICertificateService {
 export class CertificateService implements ICertificateService {
   async getCertificate(uuid: string): Promise<any> {
     const certificate = await Certificate.findOne({
-      where: {
-        uuid,
-      },
+      uuid,
     });
 
     if (!certificate) {
       throw new NotFoundError(`Certificate with uuid ${uuid} not found!`);
     }
 
+    const certificateConfig = getCertificateConfig({
+      year: certificate.year,
+      month: certificate.month,
+    });
+
+    console.log(certificateConfig);
+
     return {
       uuid,
       name: certificate.name,
+      regno: certificate.regno,
+      email: certificate.email,
       image: await generateCertificate({
         uuid: certificate.uuid,
         name: certificate.name,
         url: `https://certify.ngoayuda.org/verify/${uuid}`,
-        certificate: {
-          year: "2022",
-          name: "certificate-dec",
-        },
+        certificateSettings: certificateConfig,
       }),
     };
   }
@@ -57,17 +66,27 @@ export class CertificateService implements ICertificateService {
   }
 
   async createCertificate(certificateData: CertificateDTO): Promise<any> {
-    const { id, name } = certificateData;
+    const { id, name, email, regno, year, month } = certificateData;
 
     if (!name) {
       throw new InvalidInputError("Invalid name");
     }
 
+    if (!year) {
+      throw new InvalidInputError("Invalid year");
+    }
+
+    if (!month) {
+      throw new InvalidInputError("Invalid month");
+    }
+
     const certificate = Certificate.build({
       uuid: id,
       name,
-      startDate: new Date().toISOString(),
-      endDate: new Date().toISOString(),
+      email,
+      regno,
+      year,
+      month,
     });
 
     await certificate.save();
@@ -75,15 +94,8 @@ export class CertificateService implements ICertificateService {
     return {
       uuid: certificate.uuid,
       name: certificate.name,
-      image: await generateCertificate({
-        uuid: certificate.uuid,
-        name: certificate.name,
-        url: `https://certify.ngoayuda.org/verify/${id}`,
-        certificate: {
-          year: "2022",
-          name: "certificate-dec",
-        },
-      }),
+      email: certificate.email,
+      regno: certificate.regno,
     };
   }
 
@@ -106,7 +118,7 @@ export class CertificateService implements ICertificateService {
       });
     } catch (err: any) {
       logger.error(context.DATABASE_CONTEXT, err.message);
-      throw new InternalServerError(err as Error.message);
+      throw new InternalServerError(err.message);
     }
 
     return {

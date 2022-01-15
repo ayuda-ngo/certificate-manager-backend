@@ -8,6 +8,7 @@ import GlobalErrorHandler from "../controllers/globalErrorHandler";
 
 // Routes
 import CertificateRoute from "./certificate";
+import { checkAuthToken } from "../core/middlewares/check-auth-token";
 
 const app = express();
 
@@ -31,7 +32,7 @@ app.get("/", (_, res) => res.send("¯¯\\__(ツ)__/¯¯"));
 
 app.use("/static", express.static(path.join(__dirname, "../assets")));
 
-app.use("/certificates", CertificateRoute);
+app.use("/certificates", checkAuthToken, CertificateRoute);
 
 // 404 Error
 app.use(NotFoundHandler);

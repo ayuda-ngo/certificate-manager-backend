@@ -4,7 +4,6 @@ import { createWriteStream, existsSync, mkdirSync, readFileSync } from "fs";
 import {
   CERTIFICATE_OUT_DIR,
   CERTIFICATE_TEMPLATE_DIR,
-  certificateDefaults,
   context,
 } from "../../config";
 import logger from "../../logger";
@@ -13,16 +12,29 @@ interface certificateData {
   uuid: string;
   name: string;
   url: string;
-  certificate: {
-    year: string;
+  certificateSettings: {
     name: string;
+    settings: {
+      fontColor: string;
+      nameX: number;
+      nameY: number;
+      nameFontSize: number;
+      qrCodeX: number;
+      qrCodeY: number;
+      qrCodeSize: number;
+      urlX: number;
+      urlY: number;
+      urlFontSize: number;
+    };
   };
 }
 
 export const generateCertificate = async (data: certificateData) => {
   try {
+    const certificateSettings = data.certificateSettings.settings;
+
     const blankCertificateFile: Buffer = await readFileSync(
-        `${CERTIFICATE_TEMPLATE_DIR}/${data.certificate.year}/${data.certificate.name}.png`
+        `${CERTIFICATE_TEMPLATE_DIR}/${data.certificateSettings.name}`
       ),
       certificateImage: Image = await loadImage(blankCertificateFile),
       canvas = createCanvas(certificateImage.width, certificateImage.height),
@@ -30,36 +42,42 @@ export const generateCertificate = async (data: certificateData) => {
     ctx.drawImage(certificateImage, 0, 0, canvas.width, canvas.height);
 
     // Adjust Font Size
-    let { fontSize } = certificateDefaults;
-    const fontFace = certificateDefaults.font,
-      { fontColor } = certificateDefaults;
-
+    let fontSize = certificateSettings.nameFontSize;
+    const fontFace = "Times New Roman";
     do {
       fontSize--;
       ctx.font = `${fontSize}px ${fontFace}`;
     } while (ctx.measureText(data.name).width > 850);
 
-    ctx.font = `${fontSize}px ${fontFace}`;
-    ctx.fillStyle = fontColor;
+    ctx.font = `${fontSize}px bold ${fontFace}`;
+    ctx.fillStyle = certificateSettings.fontColor;
     ctx.textAlign = "center";
 
-    ctx.fillText(data.name, certificateImage.width - 725, 1750);
+    ctx.fillText(
+      data.name,
+      certificateSettings.nameX,
+      certificateSettings.nameY
+    );
 
     // Generate QRCode.
     const qrcode: Buffer = await QRCode.toBuffer(data.url),
       qrcodeImage: Image = await loadImage(qrcode);
-    ctx.drawImage(qrcodeImage, 1698, 2730, 360, 360);
+    ctx.drawImage(
+      qrcodeImage,
+      certificateSettings.qrCodeX,
+      certificateSettings.qrCodeY,
+      certificateSettings.qrCodeSize,
+      certificateSettings.qrCodeSize
+    );
 
     // Write the Certificate URL
-    ctx.font = `44px ${fontFace}`;
-    ctx.fillStyle = fontColor;
+    ctx.font = `${certificateSettings.urlFontSize}px ${fontFace}`;
+    ctx.fillStyle = certificateSettings.fontColor;
     ctx.textAlign = "left";
-    ctx.fillText(data.url, 1125, 3400);
+    ctx.fillText(data.url, certificateSettings.urlX, certificateSettings.urlY);
 
-    /*
-     * Optional: Save the certificate.
-     * Await saveCertificate({ name: data.name, uuid: data.uuid }, canvas);
-     */
+    // Optional: Save the certificate.
+    // await saveCertificate({ name: data.name, uuid: data.uuid }, canvas);
 
     return canvas.toDataURL();
   } catch (err) {

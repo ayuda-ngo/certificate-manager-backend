@@ -43,8 +43,6 @@ export class GenerateCertificateController extends BaseController {
         month: month,
       };
 
-      logger.debug("create-certificate-controller", certificateData);
-
       const certificate =
         this._certificateService.createCertificate(certificateData);
 

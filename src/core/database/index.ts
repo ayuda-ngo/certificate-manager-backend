@@ -6,9 +6,8 @@ import logger from "../../logger";
 
 const connectDB = async () => {
   try {
-    const url = `${MONGO_URI}`;
-
-    return await mongoose.connect(url);
+    console.log(MONGO_URI);
+    return await mongoose.connect(MONGO_URI);
   } catch (err) {
     logger.error(context.DATABASE_CONTEXT, err);
   }

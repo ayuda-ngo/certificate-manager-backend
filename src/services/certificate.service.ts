@@ -20,6 +20,7 @@ export interface CertificateDTO {
 export interface ICertificateService {
   createCertificate(certificateData: CertificateDTO): Promise<any>;
   getCertificate(uuid: string): Promise<any>;
+  fetchCertificateImage(uuid: string): Promise<any>;
   getCertificates(): Promise<any>;
   deleteCertificate(uuid: string): Promise<any>;
 }
@@ -34,25 +35,34 @@ export class CertificateService implements ICertificateService {
       throw new NotFoundError(`Certificate with uuid ${uuid} not found!`);
     }
 
-    const certificateConfig = getCertificateConfig({
-      year: certificate.year,
-      month: certificate.month,
-    });
-
-    console.log(certificateConfig);
-
     return {
       uuid,
       name: certificate.name,
       regno: certificate.regno,
       email: certificate.email,
-      image: await generateCertificate({
-        uuid: certificate.uuid,
-        name: certificate.name,
-        url: `https://certify.ngoayuda.org/verify/${uuid}`,
-        certificateSettings: certificateConfig,
-      }),
     };
+  }
+
+  async fetchCertificateImage(uuid: string): Promise<any> {
+    const certificate = await Certificate.findOne({
+      uuid,
+    });
+
+    if (!certificate) {
+      throw new NotFoundError(`Certificate with uuid ${uuid} not found!`);
+    }
+
+    const certificateConfig = getCertificateConfig({
+      year: certificate.year,
+      month: certificate.month,
+    });
+
+    return await generateCertificate({
+      uuid: certificate.uuid,
+      name: certificate.name,
+      url: `https://certify.ngoayuda.org/verify/${uuid}`,
+      certificateSettings: certificateConfig,
+    });
   }
 
   async getCertificates(): Promise<any> {
@@ -61,6 +71,8 @@ export class CertificateService implements ICertificateService {
     return certificates.map((certificate) => ({
       uuid: certificate.uuid,
       name: certificate.name,
+      year: certificate.year,
+      month: certificate.month,
       url: `https://certify.ngoayuda.org/verify/${certificate.uuid}`,
     }));
   }

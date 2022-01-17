@@ -16,7 +16,15 @@ const startProcess = async () => {
       context.DATABASE_CONTEXT,
       "Database connection has been established successfully."
     );
+  } catch (error) {
+    logger.error(
+      context.DATABASE_CONTEXT,
+      "Unable to connect to the database:",
+      error
+    );
+  }
 
+  try {
     // Start server
     server.listen(PORT, () => {
       logger.info(
@@ -25,11 +33,7 @@ const startProcess = async () => {
       );
     });
   } catch (error) {
-    logger.error(
-      context.DATABASE_CONTEXT,
-      "Unable to connect to the database:",
-      error
-    );
+    logger.error(context.SERVER_CONTEXT, "Unable to start server.", error);
   }
 };
 

@@ -76,6 +76,28 @@ export class GetCertificateController extends BaseController {
   }
 }
 
+export class FetchCertificateImageController extends BaseController {
+  private _certificateService: ICertificateService;
+
+  constructor(certificateService: ICertificateService) {
+    super();
+    this._certificateService = certificateService;
+  }
+
+  protected async executeImpl(req: Request, res: Response) {
+    try {
+      const certificateImage = this._certificateService.fetchCertificateImage(
+        req.params.uuid
+      );
+
+      BaseController.ok(res, await certificateImage);
+    } catch (err) {
+      logger.error("fetch-certificate-image-controller", err);
+      BaseController.fail(res, err as Error);
+    }
+  }
+}
+
 export class GetCertificatesController extends BaseController {
   private _certificateService: ICertificateService;
 

@@ -2,6 +2,7 @@
 
 import {
   DeleteCertificateController,
+  FetchCertificateImageController,
   GenerateCertificateController,
   GetCertificateController,
   GetCertificatesController,
@@ -21,5 +22,9 @@ export const getCertificates = new GetCertificatesController(
 );
 
 export const deleteCertificate = new DeleteCertificateController(
+  certificateService
+);
+
+export const fetchCertificateImage = new FetchCertificateImageController(
   certificateService
 );

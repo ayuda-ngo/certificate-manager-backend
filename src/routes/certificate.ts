@@ -4,6 +4,7 @@ import validator from "validator";
 // Project imports
 import { BadRequestError } from "../core/errors/api.error";
 import {
+  fetchCertificateImage,
   generateCertificate,
   getCertificate,
   getCertificates,
@@ -21,7 +22,9 @@ router.param("id", (_req: Request, _res: Response, next: NextFunction, id) => {
 
 router.post("/new", generateCertificate.execute);
 router.get("/", getCertificates.execute);
+router.get("/:uuid/image", fetchCertificateImage.execute);
 router.get("/:uuid", getCertificate.execute);
+
 router.delete("/:uuid");
 
 export default router;

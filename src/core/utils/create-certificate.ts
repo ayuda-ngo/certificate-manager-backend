@@ -8,30 +8,14 @@ import {
 } from "../../config";
 import logger from "../../logger";
 
-interface certificateData {
-  uuid: string;
-  name: string;
-  url: string;
-  certificateSettings: {
-    name: string;
-    settings: {
-      fontColor: string;
-      nameX: number;
-      nameY: number;
-      nameFontSize: number;
-      qrCodeX: number;
-      qrCodeY: number;
-      qrCodeSize: number;
-      urlX: number;
-      urlY: number;
-      urlFontSize: number;
-    };
-  };
-}
+// project imports
+import { certificateData } from "./get-certificate-config";
 
 export const generateCertificate = async (data: certificateData) => {
   try {
     const certificateSettings = data.certificateSettings.settings;
+
+    console.log(certificateSettings);
 
     const blankCertificateFile: Buffer = await readFileSync(
         `${CERTIFICATE_TEMPLATE_DIR}/${data.certificateSettings.name}`
@@ -47,9 +31,11 @@ export const generateCertificate = async (data: certificateData) => {
     do {
       fontSize--;
       ctx.font = `${fontSize}px ${fontFace}`;
-    } while (ctx.measureText(data.name).width > 850);
+    } while (ctx.measureText(data.name).width > certificateSettings.nameWidth);
 
-    ctx.font = `${fontSize}px bold ${fontFace}`;
+    console.log(`${fontSize}px ${fontFace}`);
+
+    ctx.font = `${fontSize}px ${fontFace}`;
     ctx.fillStyle = certificateSettings.fontColor;
     ctx.textAlign = "center";
 
@@ -71,7 +57,7 @@ export const generateCertificate = async (data: certificateData) => {
     );
 
     // Write the Certificate URL
-    ctx.font = `${certificateSettings.urlFontSize}px ${fontFace}`;
+    ctx.font = `${certificateSettings.urlFontSize}px Arial`;
     ctx.fillStyle = certificateSettings.fontColor;
     ctx.textAlign = "left";
     ctx.fillText(data.url, certificateSettings.urlX, certificateSettings.urlY);

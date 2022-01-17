@@ -2,7 +2,7 @@ import express from "express";
 import path from "path";
 import cors from "cors";
 
-import * as config from "../config";
+// project imports
 import NotFoundHandler from "../controllers/notFoundHandler";
 import GlobalErrorHandler from "../controllers/globalErrorHandler";
 

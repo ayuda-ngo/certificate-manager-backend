@@ -40,6 +40,7 @@ export class CertificateService implements ICertificateService {
       name: certificate.name,
       regno: certificate.regno,
       email: certificate.email,
+      url: `https://certify.ngoayuda.org/verify/${uuid}`,
     };
   }
 

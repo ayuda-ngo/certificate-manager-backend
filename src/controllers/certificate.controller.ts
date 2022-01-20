@@ -22,9 +22,7 @@ export class GenerateCertificateController extends BaseController {
 
   protected async executeImpl(req: Request, res: Response) {
     try {
-      const { name, year, month } = req.body;
-
-      console.log(name, year, month);
+      const { name, year, month, type } = req.body;
 
       if (name.length <= 0) {
         throw new InvalidInputError("Invalid name");
@@ -34,9 +32,16 @@ export class GenerateCertificateController extends BaseController {
         throw new InvalidInputError("Invalid year or month");
       }
 
+      if (!type) {
+        throw new InvalidInputError("Invalid Certificate type.");
+      }
+
+      console.log(req.body);
+
       const certificateData: CertificateDTO = {
         id: nanoid(UUID_LENGTH),
         name: name,
+        type: type,
         regno: req.body.regno || null,
         email: req.body.email || null,
         year: year,

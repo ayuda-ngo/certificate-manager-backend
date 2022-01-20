@@ -11,6 +11,7 @@ import logger from "../logger";
 export interface CertificateDTO {
   id: string;
   name: string;
+  type: string;
   regno: string;
   email: string;
   year: string;
@@ -40,6 +41,7 @@ export class CertificateService implements ICertificateService {
       name: certificate.name,
       regno: certificate.regno,
       email: certificate.email,
+      type: certificate.type,
       url: `https://certify.ngoayuda.org/verify/${uuid}`,
     };
   }
@@ -72,6 +74,7 @@ export class CertificateService implements ICertificateService {
     return certificates.map((certificate) => ({
       uuid: certificate.uuid,
       name: certificate.name,
+      type: certificate.type,
       year: certificate.year,
       month: certificate.month,
       url: `https://certify.ngoayuda.org/verify/${certificate.uuid}`,
@@ -79,7 +82,7 @@ export class CertificateService implements ICertificateService {
   }
 
   async createCertificate(certificateData: CertificateDTO): Promise<any> {
-    const { id, name, email, regno, year, month } = certificateData;
+    const { id, name, email, type, regno, year, month } = certificateData;
 
     if (!name) {
       throw new InvalidInputError("Invalid name");
@@ -93,9 +96,14 @@ export class CertificateService implements ICertificateService {
       throw new InvalidInputError("Invalid month");
     }
 
+    if (!type) {
+      throw new InvalidInputError("Invalid Certificate type.");
+    }
+
     const certificate = Certificate.build({
       uuid: id,
       name,
+      type,
       email,
       regno,
       year,

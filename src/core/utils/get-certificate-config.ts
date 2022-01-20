@@ -40,6 +40,7 @@ export const AvailableCertificates = {
         fontColor: "#231f20",
         nameX: 1840,
         nameY: 1758,
+        nameWidth: 1000,
         nameFontSize: 100,
         qrCodeX: 1698,
         qrCodeY: 2730,

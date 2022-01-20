@@ -15,8 +15,6 @@ export const generateCertificate = async (data: certificateData) => {
   try {
     const certificateSettings = data.certificateSettings.settings;
 
-    console.log(certificateSettings);
-
     const blankCertificateFile: Buffer = await readFileSync(
         `${CERTIFICATE_TEMPLATE_DIR}/${data.certificateSettings.name}`
       ),
@@ -32,8 +30,6 @@ export const generateCertificate = async (data: certificateData) => {
       fontSize--;
       ctx.font = `${fontSize}px ${fontFace}`;
     } while (ctx.measureText(data.name).width > certificateSettings.nameWidth);
-
-    console.log(`${fontSize}px ${fontFace}`);
 
     ctx.font = `${fontSize}px ${fontFace}`;
     ctx.fillStyle = certificateSettings.fontColor;

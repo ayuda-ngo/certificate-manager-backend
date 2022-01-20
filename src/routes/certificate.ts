@@ -4,6 +4,7 @@ import validator from "validator";
 // Project imports
 import { BadRequestError } from "../core/errors/api.error";
 import {
+  deleteCertificate,
   fetchCertificateImage,
   generateCertificate,
   getCertificate,
@@ -24,7 +25,6 @@ router.post("/new", generateCertificate.execute);
 router.get("/", getCertificates.execute);
 router.get("/:uuid/image", fetchCertificateImage.execute);
 router.get("/:uuid", getCertificate.execute);
-
-router.delete("/:uuid");
+router.delete("/:uuid", deleteCertificate.execute);
 
 export default router;

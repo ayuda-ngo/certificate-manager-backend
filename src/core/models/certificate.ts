@@ -7,6 +7,7 @@ interface CertificateAttributes {
   regno: string;
   year: string;
   month: string;
+  type: string;
 }
 
 export interface CertificateDoc extends Document {
@@ -16,6 +17,7 @@ export interface CertificateDoc extends Document {
   regno: string;
   year: string;
   month: string;
+  type: string;
 }
 
 interface CertificateModel extends Model<CertificateDoc> {
@@ -30,6 +32,10 @@ const certificateSchema = new Schema({
     index: true,
   },
   name: {
+    type: String,
+    required: true,
+  },
+  type: {
     type: String,
     required: true,
   },
@@ -53,6 +59,7 @@ certificateSchema.statics.build = (attributes: CertificateAttributes) =>
   new Certificate({
     uuid: attributes.uuid,
     name: attributes.name,
+    type: attributes.type,
     email: attributes.email,
     regno: attributes.regno,
     year: attributes.year,

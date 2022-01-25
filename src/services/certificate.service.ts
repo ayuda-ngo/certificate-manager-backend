@@ -5,7 +5,10 @@ import { InternalServerError, NotFoundError } from "../core/errors/api.error";
 import { Certificate } from "../core/models/certificate";
 
 import { generateCertificate } from "../core/utils/create-certificate";
-import { getCertificateConfig } from "../core/utils/get-certificate-config";
+import {
+  getCertificateConfig,
+  getCertificateType,
+} from "../core/utils/get-certificate-config";
 import logger from "../logger";
 
 export interface CertificateDTO {
@@ -96,8 +99,22 @@ export class CertificateService implements ICertificateService {
       throw new InvalidInputError("Invalid month");
     }
 
+    const isValidCombination = getCertificateConfig({ year, month });
+
+    if (!isValidCombination) {
+      throw new InvalidInputError(
+        `Invalid combination of year and month. Year: ${year}, Month: ${month}`
+      );
+    }
+
     if (!type) {
       throw new InvalidInputError("Invalid Certificate type.");
+    }
+
+    const isValidCertificateType = getCertificateType(type);
+
+    if (!isValidCertificateType) {
+      throw new InvalidInputError(`Invalid Certificate type. Type: ${type}`);
     }
 
     const certificate = Certificate.build({

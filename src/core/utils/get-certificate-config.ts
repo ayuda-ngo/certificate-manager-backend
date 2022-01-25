@@ -10,6 +10,12 @@ enum AvailableCertificateNames {
   JULY = "certificate-jul",
 }
 
+enum AvailableCertificateTypes {
+  VOLUNTEERING = "volunteering",
+  WORKSHOP = "workshop",
+  EVENT = "event",
+}
+
 export interface certificateData {
   uuid: string;
   name: string;
@@ -107,14 +113,23 @@ export const AvailableCertificates = {
 
 // @ts-ignore
 export const getCertificateConfig = ({ year, month }) => {
-  // @ts-ignore
-  const certificateConfig = AvailableCertificates[year][month];
+  try {
+    // @ts-ignore
+    const certificateConfig = AvailableCertificates[year][month];
 
-  if (!certificateConfig) {
-    throw new Error(
-      `Certificate not found for year ${year} and month ${month}`
-    );
+    return certificateConfig;
+  } catch {
+    return null;
   }
+};
 
-  return certificateConfig;
+export const getCertificateType = (type: string) => {
+  try {
+    // @ts-ignore
+    const certificateType = AvailableCertificateTypes[type];
+
+    return certificateType;
+  } catch {
+    return null;
+  }
 };

@@ -10,11 +10,11 @@ enum AvailableCertificateNames {
   JULY = "certificate-jul",
 }
 
-enum AvailableCertificateTypes {
-  VOLUNTEERING = "volunteering",
-  WORKSHOP = "workshop",
-  EVENT = "event",
-}
+const AvailableCertificateTypes = {
+  volunteering: "VOLUNTEERING",
+  workshop: "WORKSHOP",
+  event: "EVENT",
+};
 
 export interface certificateData {
   uuid: string;

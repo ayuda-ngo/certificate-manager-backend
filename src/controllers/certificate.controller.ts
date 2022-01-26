@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
-import { nanoid } from "nanoid";
 import { UUID_LENGTH } from "../config";
 import { InvalidInputError } from "../core/errors/api.error";
 
-import logger from "../logger";
-
 // Project imports
+import logger from "../logger";
+import generateUUID from "../core/utils/create-nanoid";
 import {
   CertificateDTO,
   ICertificateService,
@@ -36,10 +35,16 @@ export class GenerateCertificateController extends BaseController {
         throw new InvalidInputError("Invalid Certificate type.");
       }
 
-      console.log(req.body);
+      let uuid = await generateUUID(UUID_LENGTH);
+
+      // check if certificate already exists
+
+      while (await this._certificateService.checkIfCertificateExists(uuid)) {
+        uuid = await generateUUID(UUID_LENGTH);
+      }
 
       const certificateData: CertificateDTO = {
-        id: nanoid(UUID_LENGTH),
+        id: uuid,
         name: name,
         type: type,
         regno: req.body.regno || null,

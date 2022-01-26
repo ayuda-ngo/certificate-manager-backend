@@ -27,9 +27,24 @@ export interface ICertificateService {
   fetchCertificateImage(uuid: string): Promise<any>;
   getCertificates(): Promise<any>;
   deleteCertificate(uuid: string): Promise<any>;
+
+  // utility functions
+  checkIfCertificateExists(uuid: string): Promise<any>;
 }
 
 export class CertificateService implements ICertificateService {
+  async checkIfCertificateExists(uuid: string): Promise<any> {
+    const certificate = await Certificate.findOne({
+      uuid,
+    });
+
+    if (!certificate) {
+      return false;
+    }
+
+    return true;
+  }
+
   async getCertificate(uuid: string): Promise<any> {
     const certificate = await Certificate.findOne({
       uuid,

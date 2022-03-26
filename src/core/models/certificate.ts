@@ -8,6 +8,7 @@ interface CertificateAttributes {
   year: string;
   month: string;
   type: string;
+  service: string | null | undefined;
 }
 
 export interface CertificateDoc extends Document {
@@ -18,6 +19,7 @@ export interface CertificateDoc extends Document {
   year: string;
   month: string;
   type: string;
+  service: string | null | undefined;
 }
 
 interface CertificateModel extends Model<CertificateDoc> {
@@ -38,6 +40,9 @@ const certificateSchema = new Schema({
   type: {
     type: String,
     required: true,
+  },
+  service: {
+    type: String,
   },
   email: {
     type: String,
@@ -60,6 +65,7 @@ certificateSchema.statics.build = (attributes: CertificateAttributes) =>
     uuid: attributes.uuid,
     name: attributes.name,
     type: attributes.type,
+    service: attributes.service,
     email: attributes.email,
     regno: attributes.regno,
     year: attributes.year,

@@ -47,6 +47,7 @@ export class GenerateCertificateController extends BaseController {
         id: uuid,
         name: name,
         type: type,
+        service: req.body.service || null,
         regno: req.body.regno || null,
         email: req.body.email || null,
         year: year,

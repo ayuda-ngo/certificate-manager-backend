@@ -15,6 +15,7 @@ export interface CertificateDTO {
   id: string;
   name: string;
   type: string;
+  service: string | null | undefined;
   regno: string;
   email: string;
   year: string;
@@ -76,6 +77,8 @@ export class CertificateService implements ICertificateService {
     const certificateConfig = getCertificateConfig({
       year: certificate.year,
       month: certificate.month,
+      type: certificate.type,
+      service: certificate.service,
     });
 
     return await generateCertificate({
@@ -100,7 +103,8 @@ export class CertificateService implements ICertificateService {
   }
 
   async createCertificate(certificateData: CertificateDTO): Promise<any> {
-    const { id, name, email, type, regno, year, month } = certificateData;
+    const { id, name, email, type, regno, year, month, service } =
+      certificateData;
 
     if (!name) {
       throw new InvalidInputError("Invalid name");
@@ -114,7 +118,12 @@ export class CertificateService implements ICertificateService {
       throw new InvalidInputError("Invalid month");
     }
 
-    const isValidCombination = getCertificateConfig({ year, month });
+    const isValidCombination = getCertificateConfig({
+      year,
+      month,
+      type,
+      service,
+    });
 
     if (!isValidCombination) {
       throw new InvalidInputError(
@@ -140,6 +149,7 @@ export class CertificateService implements ICertificateService {
       regno,
       year,
       month,
+      service,
     });
 
     await certificate.save();

@@ -1,6 +1,6 @@
 {
   "version": 2,
   "name": "certificate-manager-backend",
-  "builds": [{ "src": "./src/app.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "/src/app.js" }]
+  "builds": [{ "src": "./src/index.ts", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "/src/index.ts" }]
 }
